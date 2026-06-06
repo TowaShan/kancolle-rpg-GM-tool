@@ -1,39 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-	<title>ŠÍ‚±‚êRPG GM—pƒZƒbƒVƒ‡ƒ“x‰‡ƒc[ƒ‹</title>
+	<title>è‰¦ã“ã‚ŒRPG GMç”¨ã‚»ãƒƒã‚·ãƒ§ãƒ³æ”¯æ´ãƒ„ãƒ¼ãƒ«</title>
 	<meta http-equiv="Content-Style-Type" content="text/css">
 
 	<style>
-	/* ‘S‘Ìƒx[ƒXİ’èF•¶šƒTƒCƒY‚Ì‰ºŒÀ‚ğ12px‚Éİ’è */
+	/* å…¨ä½“ãƒ™ãƒ¼ã‚¹è¨­å®šï¼šæ–‡å­—ã‚µã‚¤ã‚ºã®ä¸‹é™ã‚’12pxã«è¨­å®š */
 	html, body { height: 100%; box-sizing: border-box; }
 	body { margin: 0; padding: 12px; background: #f1f5f9; color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; font-size: 12px;  flex-direction: column; overflow: hidden; }
 	
-	/* ƒ^ƒCƒgƒ‹ */
+	/* ã‚¿ã‚¤ãƒˆãƒ« */
 	h2 { margin: 0 0 12px 0; font-size: 18px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; letter-spacing: -0.025em; }
 	h2::after { content: ''; flex: 1; height: 2px; background: linear-gradient(to right, #3b82f6, #e2e8f0); border-radius: 2px; }
 	
-	/* ¶‰EƒŒƒCƒAƒEƒgF¶•\• 540px */
+	/* å·¦å³ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆï¼šå·¦è¡¨å¹… 540px */
 	#mainContainer { display: grid; grid-template-columns: 540px 1fr; gap: 14px; flex: 1; min-height: 0; width: 100%; }
 	#leftPanel { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
 	#rightPanel { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
 	
-	/* ”’ƒJ[ƒh•—ƒRƒ“ƒeƒi */
+	/* ç™½ã‚«ãƒ¼ãƒ‰é¢¨ã‚³ãƒ³ãƒ†ãƒŠ */
 	.panel-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); padding: 8px; }
 	
-	/* ƒ{ƒ^ƒ“‹¤’Ê */
+	/* ãƒœã‚¿ãƒ³å…±é€š */
 	input[type="button"], .tab-btn { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid transparent; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
 	input[type="button"]:active, .tab-btn:active { transform: scale(0.97); }
 	
-	/* ¶‘¤F”»’èŠm”F•\ */
+	/* å·¦å´ï¼šåˆ¤å®šç¢ºèªè¡¨ */
 	#checkTable { border-collapse: separate; border-spacing: 0; margin-top: 0; background: white; width: 100%; table-layout: fixed; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e0; }
 	#checkTable th, #checkTable td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 5px 1px; text-align: center; font-size: 14px; transition: background-color 0.15s; white-space: nowrap; }
 	#checkTable th { background: #f8fafc; font-weight: 700; color: #475569; font-size: 12px; border-bottom: 2px solid #cbd5e0; }
 	#checkTable td { cursor: pointer; background: #fff; font-weight: 700; color: #0f172a; }
 	#checkTable td:hover { background: #f0fdf4; }
 	
-	/* ƒRƒ“ƒgƒ[ƒ‹ƒ{ƒ^ƒ“ŒQ */
+	/* ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ãƒœã‚¿ãƒ³ç¾¤ */
 	.control-btns { display: flex; gap: 6px; margin-top: 2px; }
 	.btn-clear { background: #fee2e2; color: #ef4444; border-color: #fca5a5 !important; }
 	.btn-clear:hover { background: #ef4444; color: #ffffff; }
@@ -42,65 +41,65 @@
 	.btn-remove { background: #f5f5f5; color: #525252; border-color: #d4d4d4 !important; }
 	.btn-remove:hover { background: #737373; color: #ffffff; }
 	
-	/* ƒZ[ƒuEƒ[ƒhƒGƒŠƒA */
+	/* ã‚»ãƒ¼ãƒ–ãƒ»ãƒ­ãƒ¼ãƒ‰ã‚¨ãƒªã‚¢ */
 	.saveload-container { display: flex; flex-direction: column; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px; border-radius: 6px; }
 	.saveload-row { display: flex; align-items: center; gap: 6px; }
 	.saveload-row input.main-btn { width: 115px; flex-shrink: 0; background: #ffffff; color: #0f172a; border-color: #cbd5e0 !important; font-size: 12px; padding: 4px 0; }
 	.saveload-row input.main-btn:hover { background: #0f172a; color: #ffffff; border-color: #0f172a !important; }
 	.saveload-row textarea { flex: 1; height: 24px; font-size: 12px; padding: 3px 6px; border: 1px solid #cbd5e0; border-radius: 6px; resize: none; white-space: nowrap; overflow: hidden; box-sizing: border-box; background: #ffffff; color: #334155; }
 	
-	/* ƒŠƒAƒ‹ƒ^ƒCƒ€–Ú•W’l•\¦”Â */
+	/* ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ ç›®æ¨™å€¤è¡¨ç¤ºæ¿ */
 	#refDisplay { padding: 8px; background: #fffbeb; border: 1px solid #fef3c7; border-left: 4px solid #d97706; border-radius: 6px; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 	.ref-header-title { font-weight: 700; font-size: 16px; color: #b45309; margin-bottom: 6px; border-bottom: 1px dashed #fde68a; padding-bottom: 4px; flex-shrink: 0; }
 	.ref-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; overflow-y: auto; flex: 1; min-height: 0; padding-right: 2px; }
 	.ref-item { background: white; border: 1px solid #fde68a; padding: 5px 8px; border-radius: 6px; font-size: 14px; text-align: left; box-shadow: 0 1px 2px rgba(217,119,6,0.05); color: #0f172a; font-weight: 700; }
 	
-	/* PC–¼İ’èƒGƒŠƒA */
+	/* PCåè¨­å®šã‚¨ãƒªã‚¢ */
 	.pc-name-setter { background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; }
 	.pc-name-container { display: flex; flex-wrap: wrap; gap: 6px; }
 	.pc-name-row { display: flex; flex-direction: column; font-size: 12px; font-weight: 700; color: #475569; width: 84px; }
 	.pc-name-row label { margin-bottom: 2px; text-indent: 2px; }
 	.pc-name-row input { padding: 3px 6px; font-size: 12px; border: 1px solid #cbd5e0; border-radius: 6px; width: 100%; box-sizing: border-box; background: #fff; color: #0f172a; font-weight: 600; }
 	
-	/* ƒ^ƒuƒVƒXƒeƒ€ */
+	/* ã‚¿ãƒ–ã‚·ã‚¹ãƒ†ãƒ  */
 	.tab-container { display: flex; gap: 3px; margin-bottom: -1px; position: relative; z-index: 2; }
 	.tab-btn { padding: 5px 14px; background: #e2e8f0; color: #475569; border-radius: 6px 6px 0 0; border: 1px solid #cbd5e0; border-bottom: none; font-weight: 700; font-size: 12px; display: none; box-shadow: none; }
 	.tab-btn:hover { background: #cbd5e0; color: #0f172a; }
 	.tab-btn.active { background: #ffffff; color: #2563eb; border-color: #cbd5e0; border-bottom: 2px solid #ffffff; padding-bottom: 6px; }
 	
-	/* PCŒÂ«•\ƒpƒlƒ‹–{‘Ì */
+	/* PCå€‹æ€§è¡¨ãƒ‘ãƒãƒ«æœ¬ä½“ */
 	.pc-panel { display: none; background: white; padding: 8px; border-radius: 0 8px 8px 8px; border: 1px solid #cbd5e0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); height: calc(100% - 75px); box-sizing: border-box; }
 	.pc-panel.active { display: block; }
 	
-	/* ‰E‘¤FŒÂ«•\ƒe[ƒuƒ‹ƒx[ƒX */
+	/* å³å´ï¼šå€‹æ€§è¡¨ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ™ãƒ¼ã‚¹ */
 	.skill-table { border-collapse: separate; border-spacing: 0; text-align: center; background: white; width: 100%; height: 100%; table-layout: fixed; border: 1px solid #cbd5e0; border-radius: 6px; overflow: hidden; }
 	.skill-table th { background: #f8fafc; padding: 4px 2px; font-size: 12px; font-weight: 700; color: #475569; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #cbd5e0; }
 	
-	/* ã‰ºƒ‹[ƒvƒwƒbƒ_[ */
+	/* ä¸Šä¸‹ãƒ«ãƒ¼ãƒ—ãƒ˜ãƒƒãƒ€ãƒ¼ */
 	.loop-header { cursor: pointer; background: #f1f5f9 !important; font-size: 12px !important; font-weight: 700 !important; color: #0f172a !important; padding: 5px !important; border-bottom: 2px solid #cbd5e0 !important; }
 	.loop-header:hover { color: #2563eb !important; }
 	
-	/* cüˆêŠ‡Ø‘Öƒwƒbƒ_[F24px• */
+	/* ç¸¦ç·šä¸€æ‹¬åˆ‡æ›¿ãƒ˜ãƒƒãƒ€ãƒ¼ï¼š24pxå¹… */
 	.colgap-header { cursor: pointer; background: #f8fafc; width: 24px; padding: 0 !important; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #cbd5e0; }
 	.colgap-header:hover { background: #cbd5e0; }
 	
-	/* ‰EŒÂ«•\F“Á‹Z–¼E“ïˆÕ“xƒeƒLƒXƒg */
+	/* å³å€‹æ€§è¡¨ï¼šç‰¹æŠ€åãƒ»é›£æ˜“åº¦ãƒ†ã‚­ã‚¹ãƒˆ */
 	.skillsCol { font-size: 15px; cursor: pointer; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: #0f172a; line-height: 1.2; transition: transform 0.1s, box-shadow 0.1s; }
 	.skillsCol:hover { transform: scale(1.02); box-shadow: inset 0 0 0 2px #3b82f6; position: relative; z-index: 5; }
 	.skill-val-text { font-size: 16px; font-weight: 800; color: #0f172a; display: inline-block; margin-top: 1px; }
 	
-	/* ƒMƒƒƒbƒviŒ„ŠÔ—ñjF24px• */
+	/* ã‚®ãƒ£ãƒƒãƒ—ï¼ˆéš™é–“åˆ—ï¼‰ï¼š24pxå¹… */
 	.spacer { width: 24px !important; background: #ffffff; cursor: pointer; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; transition: background-color 0.15s; padding: 0 !important; }
 	.spacer:hover { background: #94a3b8; }
 	
-	/* ‰E’[ŒÅ’è‚Ì•Å”•\¦ */
+	/* å³ç«¯å›ºå®šã®é æ•°è¡¨ç¤º */
 	.spacer_black { width: 18px; background: #334155; color: #ffffff; font-size: 12px; font-weight: 700; border-bottom: 1px solid #475569; }
 	
-	/* ¶‰Eƒ‹[ƒv */
+	/* å·¦å³ãƒ«ãƒ¼ãƒ— */
 	.side-loop { cursor: pointer; background: #f1f5f9; width: 18px; font-size: 12px; font-weight: 800; color: #475569; border-left: 2px solid #cbd5e0; border-bottom: 1px solid #cbd5e0; padding: 0 !important; transition: all 0.2s; letter-spacing: 0.1em; }
 	.side-loop:hover { color: #2563eb; }
 	
-	/* ƒXƒNƒ[ƒ‹ƒo[ */
+	/* ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ */
 	::-webkit-scrollbar { width: 6px; height: 6px; }
 	::-webkit-scrollbar-track { background: #f1f5f9; }
 	::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 3px; }
@@ -108,17 +107,17 @@
 
 	<script type="text/javascript">
 		const $SKILLS = [
-			["l–¬", "‘f’¼", "•sv‹c", "Q‚é", "ˆÃ†", "“dqí"],
-			["–¼º", "ƒN[ƒ‹", "‚¨‚¨‚ç‚©", "‹ó‘z", "’ÊM", "q‹ó‘ÅŒ‚í"],
-			["ˆÃ‚¢‰ß‹", "—D‚µ‚¢", "–Ê“|Œ©", "¶‚«•¨", "õ“G", "q‹óí"],
-			["ŒÃ•—", "‚¨‚µ‚Æ‚â‚©", "ƒ}ƒWƒ", "“Ç‘", "‹K—¥", "‘Î‹óí“¬"],
-			["Œû‚®‚¹", "‚¯‚È‚°", "•‰‚¯Œ™‚¢", "H‚×•¨", "•â‹‹", "“ËŒ‚"],
-			["K‰^", "ÎŠç", "Œ³‹C", "‚¨‚µ‚á‚×‚è", "‘Ò‹@", "–CŒ‚"],
-			["ƒAƒCƒhƒ‹", "‚Î‚©", "ŠyŠÏ“I", "”ƒ‚¢•¨", "‹@“®", "‘Ş‹p"],
-			["”é–§•ºŠí", "‚³‚í‚â‚©", "’š”J", "Œ|”\", "ŠC}", "x‰‡"],
-			["‚¨ì—l", "–Ê”’‚¢", "‚¢‚¶‚í‚é", "‚¨‚µ‚á‚ê", "wŠö", "‹›—‹"],
-			["ƒXƒ^ƒCƒ‹", "‚¦‚Á‚¿", "©—R–z•ú", "“ü—", "‰q¶", "‘Îöí“¬"],
-			["ŠO‘•é‚ç‚µ", "”hè", "‘å’_", "—öˆ¤", "®”õ", "–éí"]
+			["äººè„ˆ", "ç´ ç›´", "ä¸æ€è­°", "å¯ã‚‹", "æš—å·", "é›»å­æˆ¦"],
+			["åå£°", "ã‚¯ãƒ¼ãƒ«", "ãŠãŠã‚‰ã‹", "ç©ºæƒ³", "é€šä¿¡", "èˆªç©ºæ‰“æ’ƒæˆ¦"],
+			["æš—ã„éå»", "å„ªã—ã„", "é¢å€’è¦‹", "ç”Ÿãç‰©", "ç´¢æ•µ", "èˆªç©ºæˆ¦"],
+			["å¤é¢¨", "ãŠã—ã¨ã‚„ã‹", "ãƒã‚¸ãƒ¡", "èª­æ›¸", "è¦å¾‹", "å¯¾ç©ºæˆ¦é—˜"],
+			["å£ãã›", "ã‘ãªã’", "è² ã‘å«Œã„", "é£Ÿã¹ç‰©", "è£œçµ¦", "çªæ’ƒ"],
+			["å¹¸é‹", "ç¬‘é¡”", "å…ƒæ°—", "ãŠã—ã‚ƒã¹ã‚Š", "å¾…æ©Ÿ", "ç ²æ’ƒ"],
+			["ã‚¢ã‚¤ãƒ‰ãƒ«", "ã°ã‹", "æ¥½è¦³çš„", "è²·ã„ç‰©", "æ©Ÿå‹•", "é€€å´"],
+			["ç§˜å¯†å…µå™¨", "ã•ã‚ã‚„ã‹", "ä¸å¯§", "èŠ¸èƒ½", "æµ·å›³", "æ”¯æ´"],
+			["ãŠå¬¢æ§˜", "é¢ç™½ã„", "ã„ã˜ã‚ã‚‹", "ãŠã—ã‚ƒã‚Œ", "æŒ‡æ®", "é­šé›·"],
+			["ã‚¹ã‚¿ã‚¤ãƒ«", "ãˆã£ã¡", "è‡ªç”±å¥”æ”¾", "å…¥æµ´", "è¡›ç”Ÿ", "å¯¾æ½œæˆ¦é—˜"],
+			["å¤–å›½æš®ã‚‰ã—", "æ´¾æ‰‹", "å¤§èƒ†", "æ‹æ„›", "æ•´å‚™", "å¤œæˆ¦"]
 		];
 
 		const $COLORS = ["#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#63BE7B","#82C77C","#A1D07E","#C0D980","#DFE282","#FFEB84","#FED280","#FDB87B","#FB9D75","#FA8370","#F8696B"];
@@ -156,7 +155,7 @@
 
 		function buildCheckTable() {
 			const checkTable = document.getElementById("checkTable");
-			let html = "<tr><th>s</th><th>1—ñ</th><th>2—ñ</th><th>3—ñ</th><th>4—ñ</th><th>5—ñ</th><th>6—ñ</th></tr>";
+			let html = "<tr><th>è¡Œ</th><th>1åˆ—</th><th>2åˆ—</th><th>3åˆ—</th><th>4åˆ—</th><th>5åˆ—</th><th>6åˆ—</th></tr>";
 			for (let i = 0; i < ROWS; i++) {
 				html += "<tr><td style='background:#f8fafc; font-weight:bold; color:#64748b;'>"+(i+1)+"</td>";
 				for (let j = 0; j < COLS; j++) {
@@ -177,13 +176,13 @@
 					html += `<col style="width:24px;"><col style="width:auto;">`;
 				}
 				html += `<col style="width:18px;"></colgroup><thead>`;
-				html += `<tr><th colspan="13" class="loop-header" onclick="toggleVLoop(${p})" id="vloop-${p}">ã‰ºƒ‹[ƒv: OFF</th></tr>`;
+				html += `<tr><th colspan="13" class="loop-header" onclick="toggleVLoop(${p})" id="vloop-${p}">ä¸Šä¸‹ãƒ«ãƒ¼ãƒ—: OFF</th></tr>`;
 				html += `<tr>`;
 				for(let j=0; j<COLS; j++) {
-					html += `<th onclick="clickColGap(${p}, ${j})" id="colgap-${p}-${j}" class="colgap-header" title="cüˆêŠ‡Ø‘Ö"></th>`;
-					html += `<th>${["ˆê.”wŒi","“ñ.–£—Í","O.«Ši","l.ï–¡","ŒÜ.qŠC","˜Z.í“¬"][j]}</th>`;
+					html += `<th onclick="clickColGap(${p}, ${j})" id="colgap-${p}-${j}" class="colgap-header" title="ç¸¦ç·šä¸€æ‹¬åˆ‡æ›¿"></th>`;
+					html += `<th>${["ä¸€.èƒŒæ™¯","äºŒ.é­…åŠ›","ä¸‰.æ€§æ ¼","å››.è¶£å‘³","äº”.èˆªæµ·","å…­.æˆ¦é—˜"][j]}</th>`;
 				}
-				html += `<th class="spacer_black">•Å</th></tr></thead><tbody>`;
+				html += `<th class="spacer_black">é </th></tr></thead><tbody>`;
 				for (let i = 0; i < ROWS; i++) {
 					html += `<tr>`;
 					for (let j = 0; j < COLS; j++) {
@@ -192,9 +191,9 @@
 						html += `<span id="name-${p}-${i}-${j}">${$SKILLS[i][j]}</span><br><span id="val-${p}-${i}-${j}" class="skill-val-text">-</span>`;
 						html += `</td>`;
 					}
-					html += `<td class="spacer_black"><b>${["“ñ","O","l","ŒÜ","˜Z","µ","”ª","‹ã","\","\ˆê","\“ñ"][i]}</b></td>`;
+					html += `<td class="spacer_black"><b>${["äºŒ","ä¸‰","å››","äº”","å…­","ä¸ƒ","å…«","ä¹","å","åä¸€","åäºŒ"][i]}</b></td>`;
 					if (i === 0) {
-						html += `<td rowspan="11" class="side-loop" onclick="toggleHLoop(${p})" id="hloop-${p}">¶<br>‰E<br>ƒ‹<br>[<br>ƒv<br><br><span style='color:#ef4444;'>OFF</span></td>`;
+						html += `<td rowspan="11" class="side-loop" onclick="toggleHLoop(${p})" id="hloop-${p}">å·¦<br>å³<br>ãƒ«<br>ãƒ¼<br>ãƒ—<br><br><span style='color:#ef4444;'>OFF</span></td>`;
 					}
 					html += `</tr>`;
 				}
@@ -225,7 +224,7 @@
 
 		function removePC() {
 			if(currentPCCount <= 1) return;
-			if(!confirm("ÅŒã”ö‚ÌPCƒV[ƒg‚ğíœ‚µ‚Ü‚·‚©H\n(“ü—Í‚³‚ê‚½ƒf[ƒ^‚ÍƒŠƒZƒbƒg‚³‚ê‚Ü‚·)")) return;
+			if(!confirm("æœ€å¾Œå°¾ã®PCã‚·ãƒ¼ãƒˆã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ\n(å…¥åŠ›ã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã¯ãƒªã‚»ãƒƒãƒˆã•ã‚Œã¾ã™)")) return;
 			
 			let p = currentPCCount - 1;
 			for(let i=0; i<ROWS; i++) {
@@ -238,8 +237,8 @@
 			pcStates[p].vLoop = false;
 			pcStates[p].hLoop = false;
 			
-			document.getElementById(`vloop-${p}`).innerText = "ã‰ºƒ‹[ƒv: OFF";
-			document.getElementById(`hloop-${p}`).innerHTML = "¶<br>‰E<br>ƒ‹<br>[<br>ƒv<br><br><span style='color:#ef4444;'>OFF</span>";
+			document.getElementById(`vloop-${p}`).innerText = "ä¸Šä¸‹ãƒ«ãƒ¼ãƒ—: OFF";
+			document.getElementById(`hloop-${p}`).innerHTML = "å·¦<br>å³<br>ãƒ«<br>ãƒ¼<br>ãƒ—<br><br><span style='color:#ef4444;'>OFF</span>";
 			
 			pcNames[p] = "PC" + (p + 1);
 			document.getElementById("name-input-" + p).value = pcNames[p];
@@ -283,7 +282,7 @@
 
 		function clickSkill(p, r, c) {
 			if (!pcStates[p].selected[r][c] && getSelectedCount(p) >= 7) {
-				alert("ŒÂ«i“Á‹Zj‚ÍãŒÀ‚Ì7ŒÂ‚Ü‚Å‚µ‚©‘I‘ğ‚Å‚«‚Ü‚¹‚ñB");
+				alert("å€‹æ€§ï¼ˆç‰¹æŠ€ï¼‰ã¯ä¸Šé™ã®7å€‹ã¾ã§ã—ã‹é¸æŠã§ãã¾ã›ã‚“ã€‚");
 				return;
 			}
 			
@@ -309,14 +308,14 @@
 
 		function toggleVLoop(p) {
 			pcStates[p].vLoop = !pcStates[p].vLoop;
-			document.getElementById(`vloop-${p}`).innerHTML = "ã‰ºƒ‹[ƒv: " + (pcStates[p].vLoop ? "<span style='color:#2563eb;'>ON</span>" : "OFF");
+			document.getElementById(`vloop-${p}`).innerHTML = "ä¸Šä¸‹ãƒ«ãƒ¼ãƒ—: " + (pcStates[p].vLoop ? "<span style='color:#2563eb;'>ON</span>" : "OFF");
 			reCalc(p, -1, -1);
 			if(lastTarget) clickCheckTarget(lastTarget.r, lastTarget.c);
 		}
 
 		function toggleHLoop(p) {
 			pcStates[p].hLoop = !pcStates[p].hLoop;
-			document.getElementById(`hloop-${p}`).innerHTML = pcStates[p].hLoop ? "¶<br>‰E<br>ƒ‹<br>[<br>ƒv<br><br><span style='color:#2563eb;'>ON</span>" : "¶<br>‰E<br>ƒ‹<br>[<br>ƒv<br><br><span style='color:#ef4444;'>OFF</span>";
+			document.getElementById(`hloop-${p}`).innerHTML = pcStates[p].hLoop ? "å·¦<br>å³<br>ãƒ«<br>ãƒ¼<br>ãƒ—<br><br><span style='color:#2563eb;'>ON</span>" : "å·¦<br>å³<br>ãƒ«<br>ãƒ¼<br>ãƒ—<br><br><span style='color:#ef4444;'>OFF</span>";
 			reCalc(p, -1, -1);
 			if(lastTarget) clickCheckTarget(lastTarget.r, lastTarget.c);
 		}
@@ -330,11 +329,11 @@
 			document.getElementById(`check-${r}-${c}`).style.background = "#fef08a";
 			document.getElementById(`check-${r}-${c}`).style.color = "#854d0e";
 			
-			document.getElementById("refTargetTitle").innerText = `Šî€”»’è“Á‹Z: u${$SKILLS[r][c]}v`;
+			document.getElementById("refTargetTitle").innerText = `åŸºæº–åˆ¤å®šç‰¹æŠ€: ã€Œ${$SKILLS[r][c]}ã€`;
 			
 			for(let p=0; p<MAX_PCS; p++) {
 				let d = reCalc(p, r, c);
-				document.getElementById("ref-val-" + p).innerText = (d >= 100) ? "‡" : d;
+				document.getElementById("ref-val-" + p).innerText = (d >= 100) ? "âˆ" : d;
 			}
 		}
 
@@ -416,7 +415,7 @@
 		}
 
 		function allReset() {
-			if(!confirm("‚·‚×‚Ä‚Ì‘I‘ğó‘Ô‚ÆPC–¼‚ğ‰Šú‰»‚µ‚ÄƒŠƒZƒbƒg‚µ‚Ü‚·‚©H")) return;
+			if(!confirm("ã™ã¹ã¦ã®é¸æŠçŠ¶æ…‹ã¨PCåã‚’åˆæœŸåŒ–ã—ã¦ãƒªã‚»ãƒƒãƒˆã—ã¾ã™ã‹ï¼Ÿ")) return;
 			location.reload();
 		}
 
@@ -450,17 +449,17 @@
 		function loadFromUrl() {
 			let inputUrl = document.getElementById("loadTextArea").value.trim();
 			if(!inputUrl) {
-				alert("ƒ[ƒh‚·‚éURL‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B");
+				alert("ãƒ­ãƒ¼ãƒ‰ã™ã‚‹URLã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚");
 				return;
 			}
 			let hashIdx = inputUrl.indexOf('#');
 			if(hashIdx === -1) {
-				alert("—LŒø‚ÈƒZ[ƒuƒf[ƒ^URL‚Å‚Í‚ ‚è‚Ü‚¹‚ñi'#'‚ªŠÜ‚Ü‚ê‚Ä‚¢‚Ü‚¹‚ñjB");
+				alert("æœ‰åŠ¹ãªã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿URLã§ã¯ã‚ã‚Šã¾ã›ã‚“ï¼ˆ'#'ãŒå«ã¾ã‚Œã¦ã„ã¾ã›ã‚“ï¼‰ã€‚");
 				return;
 			}
 			let hashData = inputUrl.substring(hashIdx + 1);
 			if(loadFromHashData(hashData)) {
-				alert("ƒf[ƒ^‚ğƒ[ƒh‚µ‚Ü‚µ‚½B");
+				alert("ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¾ã—ãŸã€‚");
 			}
 		}
 
@@ -486,15 +485,15 @@
 					const nameSpan = document.getElementById("ref-name-" + p);
 					if (nameSpan) nameSpan.innerText = pcNames[p];
 					
-					document.getElementById(`vloop-${p}`).innerHTML = "ã‰ºƒ‹[ƒv: " + (pcStates[p].vLoop ? "<span style='color:#2563eb;'>ON</span>" : "OFF");
-					document.getElementById(`hloop-${p}`).innerHTML = pcStates[p].hLoop ? "¶<br>‰E<br>ƒ‹<br>[<br>ƒv<br><br><span style='color:#2563eb;'>ON</span>" : "¶<br>‰E<br>ƒ‹<br>[<br>ƒv<br><br><span style='color:#ef4444;'>OFF</span>";
+					document.getElementById(`vloop-${p}`).innerHTML = "ä¸Šä¸‹ãƒ«ãƒ¼ãƒ—: " + (pcStates[p].vLoop ? "<span style='color:#2563eb;'>ON</span>" : "OFF");
+					document.getElementById(`hloop-${p}`).innerHTML = pcStates[p].hLoop ? "å·¦<br>å³<br>ãƒ«<br>ãƒ¼<br>ãƒ—<br><br><span style='color:#2563eb;'>ON</span>" : "å·¦<br>å³<br>ãƒ«<br>ãƒ¼<br>ãƒ—<br><br><span style='color:#ef4444;'>OFF</span>";
 				}
 				
 				updateVisibility();
 				switchPC(0);
 				return true;
 			} catch(e) {
-				alert("URLƒf[ƒ^‚Ì‰ğÍ‚É¸”s‚µ‚Ü‚µ‚½Bƒf[ƒ^‚ª”j‘¹‚µ‚Ä‚¢‚é‰Â”\«‚ª‚ ‚è‚Ü‚·B");
+				alert("URLãƒ‡ãƒ¼ã‚¿ã®è§£æã«å¤±æ•—ã—ã¾ã—ãŸã€‚ãƒ‡ãƒ¼ã‚¿ãŒç ´æã—ã¦ã„ã‚‹å¯èƒ½æ€§ãŒã‚ã‚Šã¾ã™ã€‚");
 				return false;
 			}
 		}
@@ -502,7 +501,7 @@
 </head>
 
 <body onload="onLoadProcess()">
-	<h2>ŠÍ‚±‚êRPG GM—pƒZƒbƒVƒ‡ƒ“x‰‡ƒc[ƒ‹</h2>
+	<h2>è‰¦ã“ã‚ŒRPG GMç”¨ã‚»ãƒƒã‚·ãƒ§ãƒ³æ”¯æ´ãƒ„ãƒ¼ãƒ«</h2>
 	
 	<div id="mainContainer">
 		<div id="leftPanel">
@@ -511,7 +510,7 @@
 			</div>
 			
 			<div id="refDisplay">
-				<div class="ref-header-title" id="refTargetTitle">“Á‹Z‚ğƒNƒŠƒbƒN‚µ‚Ä‚­‚¾‚³‚¢B</div>
+				<div class="ref-header-title" id="refTargetTitle">ç‰¹æŠ€ã‚’ã‚¯ãƒªãƒƒã‚¯ã—ã¦ãã ã•ã„ã€‚</div>
 				<div class="ref-grid" id="refGridContainer">
 					<div class="ref-item" id="ref-item-0"><strong id="ref-name-0">PC1</strong>: <span id="ref-val-0">-</span></div>
 					<div class="ref-item" id="ref-item-1"><strong id="ref-name-1">PC2</strong>: <span id="ref-val-1">-</span></div>
@@ -523,20 +522,20 @@
 			</div>
 
 			<div class="control-btns">
-				<input type="button" class="btn-clear" value="‘SƒNƒŠƒA" onclick="allReset()">
-				<input type="button" class="btn-add" value="PC’Ç‰Á" onclick="addPC()">
-				<input type="button" class="btn-remove" value="PCíœ" onclick="removePC()">
+				<input type="button" class="btn-clear" value="å…¨ã‚¯ãƒªã‚¢" onclick="allReset()">
+				<input type="button" class="btn-add" value="PCè¿½åŠ " onclick="addPC()">
+				<input type="button" class="btn-remove" value="PCå‰Šé™¤" onclick="removePC()">
 			</div>
 
 			<div class="panel-card" style="padding: 4px;">
 				<div class="saveload-container">
 					<div class="saveload-row">
-						<input type="button" class="main-btn" value="URLo—Í(ƒZ[ƒu)" onclick="saveToUrl()">
-						<textarea id="saveTextArea" placeholder="‚±‚±‚ÉƒZ[ƒuURL‚ªo—Í‚³‚ê‚Ü‚·" readonly></textarea>
+						<input type="button" class="main-btn" value="URLå‡ºåŠ›(ã‚»ãƒ¼ãƒ–)" onclick="saveToUrl()">
+						<textarea id="saveTextArea" placeholder="ã“ã“ã«ã‚»ãƒ¼ãƒ–URLãŒå‡ºåŠ›ã•ã‚Œã¾ã™" readonly></textarea>
 					</div>
 					<div class="saveload-row">
-						<input type="button" class="main-btn" value="URL“Ç(ƒ[ƒh)" onclick="loadFromUrl()">
-						<textarea id="loadTextArea" placeholder="‚±‚±‚ÉƒZ[ƒuURL‚ğ“\‚è•t‚¯‚Äƒ[ƒh‚µ‚Ü‚·"></textarea>
+						<input type="button" class="main-btn" value="URLèª­è¾¼(ãƒ­ãƒ¼ãƒ‰)" onclick="loadFromUrl()">
+						<textarea id="loadTextArea" placeholder="ã“ã“ã«ã‚»ãƒ¼ãƒ–URLã‚’è²¼ã‚Šä»˜ã‘ã¦ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™"></textarea>
 					</div>
 				</div>
 			</div>

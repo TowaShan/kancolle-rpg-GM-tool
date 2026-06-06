@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>艦これRPG GM用セッション支援ツール</title>
+	<meta http-equiv="Content-Style-Type" content="text/css">
+
+	<style>
+	/* 全体ベース設定：文字サイズの下限を12pxに設定 */
+	html, body { height: 100%; box-sizing: border-box; }
+	body { margin: 0; padding: 12px; background: #f1f5f9; color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; font-size: 12px;  flex-direction: column; overflow: hidden; }
+	
+	/* タイトル */
+	h2 { margin: 0 0 12px 0; font-size: 18px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; letter-spacing: -0.025em; }
+	h2::after { content: ''; flex: 1; height: 2px; background: linear-gradient(to right, #3b82f6, #e2e8f0); border-radius: 2px; }
+	
+	/* 左右レイアウト：左表幅 540px */
+	#mainContainer { display: grid; grid-template-columns: 540px 1fr; gap: 14px; flex: 1; min-height: 0; width: 100%; }
+	#leftPanel { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+	#rightPanel { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+	
+	/* 白カード風コンテナ */
+	.panel-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); padding: 8px; }
+	
+	/* ボタン共通 */
+	input[type="button"], .tab-btn { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid transparent; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+	input[type="button"]:active, .tab-btn:active { transform: scale(0.97); }
+	
+	/* 左側：判定確認表 */
+	#checkTable { border-collapse: separate; border-spacing: 0; margin-top: 0; background: white; width: 100%; table-layout: fixed; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e0; }
+	#checkTable th, #checkTable td { border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 5px 1px; text-align: center; font-size: 14px; transition: background-color 0.15s; white-space: nowrap; }
+	#checkTable th { background: #f8fafc; font-weight: 700; color: #475569; font-size: 12px; border-bottom: 2px solid #cbd5e0; }
+	#checkTable td { cursor: pointer; background: #fff; font-weight: 700; color: #0f172a; }
+	#checkTable td:hover { background: #f0fdf4; }
+	
+	/* コントロールボタン群 */
+	.control-btns { display: flex; gap: 6px; margin-top: 2px; }
+	.btn-clear { background: #fee2e2; color: #ef4444; border-color: #fca5a5 !important; }
+	.btn-clear:hover { background: #ef4444; color: #ffffff; }
+	.btn-add { background: #e0f2fe; color: #0369a1; border-color: #bae6fd !important; flex: 1; }
+	.btn-add:hover { background: #0284c7; color: #ffffff; }
+	.btn-remove { background: #f5f5f5; color: #525252; border-color: #d4d4d4 !important; }
+	.btn-remove:hover { background: #737373; color: #ffffff; }
+	
+	/* セーブ・ロードエリア */
+	.saveload-container { display: flex; flex-direction: column; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px; border-radius: 6px; }
+	.saveload-row { display: flex; align-items: center; gap: 6px; }
+	.saveload-row input.main-btn { width: 115px; flex-shrink: 0; background: #ffffff; color: #0f172a; border-color: #cbd5e0 !important; font-size: 12px; padding: 4px 0; }
+	.saveload-row input.main-btn:hover { background: #0f172a; color: #ffffff; border-color: #0f172a !important; }
+	.saveload-row textarea { flex: 1; height: 24px; font-size: 12px; padding: 3px 6px; border: 1px solid #cbd5e0; border-radius: 6px; resize: none; white-space: nowrap; overflow: hidden; box-sizing: border-box; background: #ffffff; color: #334155; }
+	
+	/* リアルタイム目標値表示板 */
+	#refDisplay { padding: 8px; background: #fffbeb; border: 1px solid #fef3c7; border-left: 4px solid #d97706; border-radius: 6px; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+	.ref-header-title { font-weight: 700; font-size: 16px; color: #b45309; margin-bottom: 6px; border-bottom: 1px dashed #fde68a; padding-bottom: 4px; flex-shrink: 0; }
+	.ref-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; overflow-y: auto; flex: 1; min-height: 0; padding-right: 2px; }
+	.ref-item { background: white; border: 1px solid #fde68a; padding: 5px 8px; border-radius: 6px; font-size: 14px; text-align: left; box-shadow: 0 1px 2px rgba(217,119,6,0.05); color: #0f172a; font-weight: 700; }
+	
+	/* PC名設定エリア */
+	.pc-name-setter { background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; }
+	.pc-name-container { display: flex; flex-wrap: wrap; gap: 6px; }
+	.pc-name-row { display: flex; flex-direction: column; font-size: 12px; font-weight: 700; color: #475569; width: 84px; }
+	.pc-name-row label { margin-bottom: 2px; text-indent: 2px; }
+	.pc-name-row input { padding: 3px 6px; font-size: 12px; border: 1px solid #cbd5e0; border-radius: 6px; width: 100%; box-sizing: border-box; background: #fff; color: #0f172a; font-weight: 600; }
+	
+	/* タブシステム */
+	.tab-container { display: flex; gap: 3px; margin-bottom: -1px; position: relative; z-index: 2; }
+	.tab-btn { padding: 5px 14px; background: #e2e8f0; color: #475569; border-radius: 6px 6px 0 0; border: 1px solid #cbd5e0; border-bottom: none; font-weight: 700; font-size: 12px; display: none; box-shadow: none; }
+	.tab-btn:hover { background: #cbd5e0; color: #0f172a; }
+	.tab-btn.active { background: #ffffff; color: #2563eb; border-color: #cbd5e0; border-bottom: 2px solid #ffffff; padding-bottom: 6px; }
+	
+	/* PC個性表パネル本体 */
+	.pc-panel { display: none; background: white; padding: 8px; border-radius: 0 8px 8px 8px; border: 1px solid #cbd5e0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); height: calc(100% - 75px); box-sizing: border-box; }
+	.pc-panel.active { display: block; }
+	
+	/* 右側：個性表テーブルベース */
+	.skill-table { border-collapse: separate; border-spacing: 0; text-align: center; background: white; width: 100%; height: 100%; table-layout: fixed; border: 1px solid #cbd5e0; border-radius: 6px; overflow: hidden; }
+	.skill-table th { background: #f8fafc; padding: 4px 2px; font-size: 12px; font-weight: 700; color: #475569; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #cbd5e0; }
+	
+	/* 上下ループヘッダー */
+	.loop-header { cursor: pointer; background: #f1f5f9 !important; font-size: 12px !important; font-weight: 700 !important; color: #0f172a !important; padding: 5px !important; border-bottom: 2px solid #cbd5e0 !important; }
+	.loop-header:hover { color: #2563eb !important; }
+	
+	/* 縦線一括切替ヘッダー：24px幅 */
+	.colgap-header { cursor: pointer; background: #f8fafc; width: 24px; padding: 0 !important; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #cbd5e0; }
+	.colgap-header:hover { background: #cbd5e0; }
+	
+	/* 右個性表：特技名・難易度テキスト */
+	.skillsCol { font-size: 15px; cursor: pointer; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: #0f172a; line-height: 1.2; transition: transform 0.1s, box-shadow 0.1s; }
+	.skillsCol:hover { transform: scale(1.02); box-shadow: inset 0 0 0 2px #3b82f6; position: relative; z-index: 5; }
+	.skill-val-text { font-size: 16px; font-weight: 800; color: #0f172a; display: inline-block; margin-top: 1px; }
+	
+	/* ギャップ（隙間列）：24px幅 */
+	.spacer { width: 24px !important; background: #ffffff; cursor: pointer; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; transition: background-color 0.15s; padding: 0 !important; }
+	.spacer:hover { background: #94a3b8; }
+	
+	/* 右端固定の頁数表示 */
+	.spacer_black { width: 18px; background: #334155; color: #ffffff; font-size: 12px; font-weight: 700; border-bottom: 1px solid #475569; }
+	
+	/* 左右ループ */
+	.side-loop { cursor: pointer; background: #f1f5f9; width: 18px; font-size: 12px; font-weight: 800; color: #475569; border-left: 2px solid #cbd5e0; border-bottom: 1px solid #cbd5e0; padding: 0 !important; transition: all 0.2s; letter-spacing: 0.1em; }
+	.side-loop:hover { color: #2563eb; }
+	
+	/* スクロールバー */
+	::-webkit-scrollbar { width: 6px; height: 6px; }
+	::-webkit-scrollbar-track { background: #f1f5f9; }
+	::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 3px; }
+	</style>
+
+	<script type="text/javascript">
+		const $SKILLS = [
+			["人脈", "素直", "不思議", "寝る", "暗号", "電子戦"],
+			["名声", "クール", "おおらか", "空想", "通信", "航空打撃戦"],
+			["暗い過去", "優しい", "面倒見", "生き物", "索敵", "航空戦"],
+			["古風", "おしとやか", "マジメ", "読書", "規律", "対空戦闘"],
+			["口ぐせ", "けなげ", "負け嫌い", "食べ物", "補給", "突撃"],
+			["幸運", "笑顔", "元気", "おしゃべり", "待機", "砲撃"],
+			["アイドル", "ばか", "楽観的", "買い物", "機動", "退却"],
+			["秘密兵器", "さわやか", "丁寧", "芸能", "海図", "支援"],
+			["お嬢様", "面白い", "いじわる", "おしゃれ", "指揮", "魚雷"],
+			["スタイル", "えっち", "自由奔放", "入浴", "衛生", "対潜戦闘"],
+			["外国暮らし", "派手", "大胆", "恋愛", "整備", "夜戦"]
+		];
+
+		const $COLORS = ["#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#63BE7B","#82C77C","#A1D07E","#C0D980","#DFE282","#FFEB84","#FED280","#FDB87B","#FB9D75","#FA8370","#F8696B"];
+		
+		const ROWS = 11;
+		const COLS = 6;
+		const MAX_PCS = 6;
+		let currentPCCount = 1;
+		let activePC = 0;
+		let lastTarget = null;
+		let pcStates = [];
+		let pcNames = ["PC1", "PC2", "PC3", "PC4", "PC5", "PC6"];
+
+		for(let p=0; p<MAX_PCS; p++) {
+			let selected = [];
+			let gaps = [];
+			let colGaps = new Array(COLS).fill(false);
+			for(let i=0; i<ROWS; i++) {
+				selected[i] = new Array(COLS).fill(false);
+				gaps[i] = new Array(COLS).fill(false);
+			}
+			pcStates.push({ selected: selected, gaps: gaps, colGaps: colGaps, vLoop: false, hLoop: false });
+		}
+
+		function onLoadProcess() {
+			buildCheckTable();
+			buildPCPanels();
+			if (window.location.hash) {
+				loadFromHashData(window.location.hash.substring(1));
+			} else {
+				updateVisibility();
+				switchPC(0);
+			}
+		}
+
+		function buildCheckTable() {
+			const checkTable = document.getElementById("checkTable");
+			let html = "<tr><th>行</th><th>1列</th><th>2列</th><th>3列</th><th>4列</th><th>5列</th><th>6列</th></tr>";
+			for (let i = 0; i < ROWS; i++) {
+				html += "<tr><td style='background:#f8fafc; font-weight:bold; color:#64748b;'>"+(i+1)+"</td>";
+				for (let j = 0; j < COLS; j++) {
+					html += `<td onclick="clickCheckTarget(${i}, ${j})" id="check-${i}-${j}"><strong>${$SKILLS[i][j]}</strong></td>`;
+				}
+				html += "</tr>";
+			}
+			checkTable.innerHTML = html;
+		}
+
+		function buildPCPanels() {
+			const container = document.getElementById("pcPanelsContainer");
+			let html = "";
+			for (let p = 0; p < MAX_PCS; p++) {
+				html += `<div class="pc-panel" id="pc-panel-${p}">`;
+				html += `<table class="skill-table"><colgroup>`;
+				for(let j=0; j<COLS; j++) {
+					html += `<col style="width:24px;"><col style="width:auto;">`;
+				}
+				html += `<col style="width:18px;"></colgroup><thead>`;
+				html += `<tr><th colspan="13" class="loop-header" onclick="toggleVLoop(${p})" id="vloop-${p}">上下ループ: OFF</th></tr>`;
+				html += `<tr>`;
+				for(let j=0; j<COLS; j++) {
+					html += `<th onclick="clickColGap(${p}, ${j})" id="colgap-${p}-${j}" class="colgap-header" title="縦線一括切替"></th>`;
+					html += `<th>${["一.背景","二.魅力","三.性格","四.趣味","五.航海","六.戦闘"][j]}</th>`;
+				}
+				html += `<th class="spacer_black">頁</th></tr></thead><tbody>`;
+				for (let i = 0; i < ROWS; i++) {
+					html += `<tr>`;
+					for (let j = 0; j < COLS; j++) {
+						html += `<td class="spacer" onclick="clickCellGap(${p}, ${i}, ${j})" id="gap-${p}-${i}-${j}"></td>`;
+						html += `<td class="skillsCol" onclick="clickSkill(${p}, ${i}, ${j})" id="skill-${p}-${i}-${j}">`;
+						html += `<span id="name-${p}-${i}-${j}">${$SKILLS[i][j]}</span><br><span id="val-${p}-${i}-${j}" class="skill-val-text">-</span>`;
+						html += `</td>`;
+					}
+					html += `<td class="spacer_black"><b>${["二","三","四","五","六","七","八","九","十","十一","十二"][i]}</b></td>`;
+					if (i === 0) {
+						html += `<td rowspan="11" class="side-loop" onclick="toggleHLoop(${p})" id="hloop-${p}">左<br>右<br>ル<br>ー<br>プ<br><br><span style='color:#ef4444;'>OFF</span></td>`;
+					}
+					html += `</tr>`;
+				}
+				html += `</tbody></table></div>`;
+			}
+			container.innerHTML = html;
+		}
+
+		function updateVisibility() {
+			for(let p = 0; p < MAX_PCS; p++) {
+				document.getElementById("name-row-" + p).style.display = (p < currentPCCount) ? "flex" : "none";
+				document.getElementById("tab-btn-" + p).style.display = (p < currentPCCount) ? "block" : "none";
+				
+				const refItem = document.getElementById("ref-item-" + p);
+				if (refItem) {
+					refItem.style.display = (p < currentPCCount) ? "block" : "none";
+				}
+			}
+			if(lastTarget) clickCheckTarget(lastTarget.r, lastTarget.c);
+		}
+
+		function addPC() {
+			if(currentPCCount >= MAX_PCS) return;
+			currentPCCount++;
+			updateVisibility();
+			switchPC(currentPCCount - 1);
+		}
+
+		function removePC() {
+			if(currentPCCount <= 1) return;
+			if(!confirm("最後尾のPCシートを削除しますか？\n(入力されたデータはリセットされます)")) return;
+			
+			let p = currentPCCount - 1;
+			for(let i=0; i<ROWS; i++) {
+				for(let j=0; j<COLS; j++) {
+					pcStates[p].selected[i][j] = false;
+					pcStates[p].gaps[i][j] = false;
+				}
+			}
+			pcStates[p].colGaps.fill(false);
+			pcStates[p].vLoop = false;
+			pcStates[p].hLoop = false;
+			
+			document.getElementById(`vloop-${p}`).innerText = "上下ループ: OFF";
+			document.getElementById(`hloop-${p}`).innerHTML = "左<br>右<br>ル<br>ー<br>プ<br><br><span style='color:#ef4444;'>OFF</span>";
+			
+			pcNames[p] = "PC" + (p + 1);
+			document.getElementById("name-input-" + p).value = pcNames[p];
+			document.getElementById("tab-btn-" + p).innerText = pcNames[p];
+			
+			currentPCCount--;
+			updateVisibility();
+			if(activePC >= currentPCCount) {
+				switchPC(currentPCCount - 1);
+			}
+		}
+
+		function updatePCName(idx, inputEl) {
+			pcNames[idx] = inputEl.value || ("PC" + (idx + 1));
+			document.getElementById("tab-btn-" + idx).innerText = pcNames[idx];
+			
+			const nameSpan = document.getElementById("ref-name-" + idx);
+			if (nameSpan) {
+				nameSpan.innerText = pcNames[idx];
+			}
+		}
+
+		function switchPC(idx) {
+			activePC = idx;
+			for(let p=0; p<MAX_PCS; p++) {
+				document.getElementById("tab-btn-"+p).classList.toggle("active", p === idx);
+				document.getElementById("pc-panel-"+p).classList.toggle("active", p === idx);
+			}
+			reCalc(idx, -1, -1);
+		}
+
+		function getSelectedCount(p) {
+			let count = 0;
+			for(let i=0; i<ROWS; i++) {
+				for(let j=0; j<COLS; j++) {
+					if(pcStates[p].selected[i][j]) count++;
+				}
+			}
+			return count;
+		}
+
+		function clickSkill(p, r, c) {
+			if (!pcStates[p].selected[r][c] && getSelectedCount(p) >= 7) {
+				alert("個性（特技）は上限の7個までしか選択できません。");
+				return;
+			}
+			
+			pcStates[p].selected[r][c] = !pcStates[p].selected[r][c];
+			reCalc(p, -1, -1);
+			if(lastTarget) clickCheckTarget(lastTarget.r, lastTarget.c);
+		}
+
+		function clickCellGap(p, r, c) {
+			pcStates[p].gaps[r][c] = !pcStates[p].gaps[r][c];
+			reCalc(p, -1, -1);
+			if(lastTarget) clickCheckTarget(lastTarget.r, lastTarget.c);
+		}
+
+		function clickColGap(p, c) {
+			pcStates[p].colGaps[c] = !pcStates[p].colGaps[c];
+			for(let i=0; i<ROWS; i++) {
+				pcStates[p].gaps[i][c] = pcStates[p].colGaps[c];
+			}
+			reCalc(p, -1, -1);
+			if(lastTarget) clickCheckTarget(lastTarget.r, lastTarget.c);
+		}
+
+		function toggleVLoop(p) {
+			pcStates[p].vLoop = !pcStates[p].vLoop;
+			document.getElementById(`vloop-${p}`).innerHTML = "上下ループ: " + (pcStates[p].vLoop ? "<span style='color:#2563eb;'>ON</span>" : "OFF");
+			reCalc(p, -1, -1);
+			if(lastTarget) clickCheckTarget(lastTarget.r, lastTarget.c);
+		}
+
+		function toggleHLoop(p) {
+			pcStates[p].hLoop = !pcStates[p].hLoop;
+			document.getElementById(`hloop-${p}`).innerHTML = pcStates[p].hLoop ? "左<br>右<br>ル<br>ー<br>プ<br><br><span style='color:#2563eb;'>ON</span>" : "左<br>右<br>ル<br>ー<br>プ<br><br><span style='color:#ef4444;'>OFF</span>";
+			reCalc(p, -1, -1);
+			if(lastTarget) clickCheckTarget(lastTarget.r, lastTarget.c);
+		}
+
+		function clickCheckTarget(r, c) {
+			if(lastTarget) {
+				document.getElementById(`check-${lastTarget.r}-${lastTarget.c}`).style.background = "";
+				document.getElementById(`check-${lastTarget.r}-${lastTarget.c}`).style.color = "";
+			}
+			lastTarget = {r: r, c: c};
+			document.getElementById(`check-${r}-${c}`).style.background = "#fef08a";
+			document.getElementById(`check-${r}-${c}`).style.color = "#854d0e";
+			
+			document.getElementById("refTargetTitle").innerText = `基準判定特技: 「${$SKILLS[r][c]}」`;
+			
+			for(let p=0; p<MAX_PCS; p++) {
+				let d = reCalc(p, r, c);
+				document.getElementById("ref-val-" + p).innerText = (d >= 100) ? "∞" : d;
+			}
+		}
+
+		function reCalc(p, targetR, targetC) {
+			let state = pcStates[p];
+			let dist = Array.from({length: ROWS}, () => Array(COLS).fill(100));
+			let queue = [];
+
+			for(let i=0; i<ROWS; i++) {
+				for(let j=0; j<COLS; j++) {
+					if(state.selected[i][j]) {
+						dist[i][j] = 5;
+						queue.push([i, j]);
+					}
+				}
+			}
+
+			while(queue.length > 0) {
+				queue.sort((a,b) => dist[a[0]][a[1]] - dist[b[0]][b[1]]);
+				let [r, c] = queue.shift();
+				let curD = dist[r][c];
+
+				let vNeighbors = [r-1, r+1];
+				for(let nr of vNeighbors) {
+					let nextR = nr;
+					if(state.vLoop) {
+						if(nextR < 0) nextR = ROWS - 1;
+						if(nextR >= ROWS) nextR = 0;
+					}
+					if(nextR >= 0 && nextR < ROWS) {
+						if(dist[nextR][c] > curD + 1) {
+							dist[nextR][c] = curD + 1;
+							queue.push([nextR, c]);
+						}
+					}
+				}
+
+				let hNeighbors = [
+					[r, c-1, c],
+					[r, c+1, c+1]
+				];
+				if(state.hLoop) {
+					if(c === 0) hNeighbors.push([r, COLS - 1, 0]);
+					if(c === COLS - 1) hNeighbors.push([r, 0, 0]);
+				}
+
+				for(let [nr, nc, gapIdx] of hNeighbors) {
+					if(nc >= 0 && nc < COLS) {
+						let cost = state.gaps[nr][gapIdx] ? 1 : 2;
+						if(dist[nr][nc] > curD + cost) {
+							dist[nr][nc] = curD + cost;
+							queue.push([nr, nc]);
+						}
+					}
+				}
+			}
+
+			if(p === activePC) {
+				for(let i=0; i<ROWS; i++) {
+					for(let j=0; j<COLS; j++) {
+						let d = dist[i][j];
+						let cell = document.getElementById(`skill-${p}-${i}-${j}`);
+						if(d < 100) {
+							cell.style.backgroundColor = $COLORS[Math.max(5, Math.min(15, d))];
+							document.getElementById(`val-${p}-${i}-${j}`).innerText = `(${d})`;
+						} else {
+							cell.style.backgroundColor = "#fff";
+							document.getElementById(`val-${p}-${i}-${j}`).innerText = "(-)";
+						}
+						document.getElementById(`gap-${p}-${i}-${j}`).style.background = state.gaps[i][j] ? "#1e293b" : "#fff";
+					}
+				}
+			}
+
+			if(targetR !== -1 && targetC !== -1) {
+				return dist[targetR][targetC];
+			}
+			return 100;
+		}
+
+		function allReset() {
+			if(!confirm("すべての選択状態とPC名を初期化してリセットしますか？")) return;
+			location.reload();
+		}
+
+		function saveToUrl() {
+			let dataObj = {
+				count: currentPCCount,
+				names: pcNames,
+				states: []
+			};
+			for(let p=0; p<MAX_PCS; p++) {
+				dataObj.states.push({
+					s: pcStates[p].selected,
+					g: pcStates[p].gaps,
+					cg: pcStates[p].colGaps,
+					vl: pcStates[p].vLoop,
+					hl: pcStates[p].hLoop
+				});
+			}
+			let jsonStr = JSON.stringify(dataObj);
+			let encodedData = btoa(encodeURIComponent(jsonStr).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+				return String.fromCharCode(parseInt(p1, 16));
+			}));
+			
+			let baseUrl = window.location.href.split('#')[0];
+			let fullUrl = baseUrl + '#' + encodedData;
+			
+			document.getElementById("saveTextArea").value = fullUrl;
+			document.getElementById("saveTextArea").select();
+		}
+
+		function loadFromUrl() {
+			let inputUrl = document.getElementById("loadTextArea").value.trim();
+			if(!inputUrl) {
+				alert("ロードするURLを入力してください。");
+				return;
+			}
+			let hashIdx = inputUrl.indexOf('#');
+			if(hashIdx === -1) {
+				alert("有効なセーブデータURLではありません（'#'が含まれていません）。");
+				return;
+			}
+			let hashData = inputUrl.substring(hashIdx + 1);
+			if(loadFromHashData(hashData)) {
+				alert("データをロードしました。");
+			}
+		}
+
+		function loadFromHashData(hashData) {
+			try {
+				let jsonStr = decodeURIComponent(atob(hashData).split('').map(function(c) {
+					return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+				}).join(''));
+				let dataObj = JSON.parse(jsonStr);
+				
+				currentPCCount = dataObj.count;
+				pcNames = dataObj.names;
+				
+				for(let p=0; p<MAX_PCS; p++) {
+					pcStates[p].selected = dataObj.states[p].s;
+					pcStates[p].gaps = dataObj.states[p].g;
+					pcStates[p].colGaps = dataObj.states[p].cg;
+					pcStates[p].vLoop = dataObj.states[p].vl;
+					pcStates[p].hLoop = dataObj.states[p].hl;
+					
+					document.getElementById("name-input-" + p).value = pcNames[p];
+					document.getElementById("tab-btn-" + p).innerText = pcNames[p];
+					const nameSpan = document.getElementById("ref-name-" + p);
+					if (nameSpan) nameSpan.innerText = pcNames[p];
+					
+					document.getElementById(`vloop-${p}`).innerHTML = "上下ループ: " + (pcStates[p].vLoop ? "<span style='color:#2563eb;'>ON</span>" : "OFF");
+					document.getElementById(`hloop-${p}`).innerHTML = pcStates[p].hLoop ? "左<br>右<br>ル<br>ー<br>プ<br><br><span style='color:#2563eb;'>ON</span>" : "左<br>右<br>ル<br>ー<br>プ<br><br><span style='color:#ef4444;'>OFF</span>";
+				}
+				
+				updateVisibility();
+				switchPC(0);
+				return true;
+			} catch(e) {
+				alert("URLデータの解析に失敗しました。データが破損している可能性があります。");
+				return false;
+			}
+		}
+	</script>
+</head>
+
+<body onload="onLoadProcess()">
+	<h2>艦これRPG GM用セッション支援ツール</h2>
+	
+	<div id="mainContainer">
+		<div id="leftPanel">
+			<div class="panel-card" style="padding: 0;">
+				<table id="checkTable"></table>
+			</div>
+			
+			<div id="refDisplay">
+				<div class="ref-header-title" id="refTargetTitle">特技をクリックしてください。</div>
+				<div class="ref-grid" id="refGridContainer">
+					<div class="ref-item" id="ref-item-0"><strong id="ref-name-0">PC1</strong>: <span id="ref-val-0">-</span></div>
+					<div class="ref-item" id="ref-item-1"><strong id="ref-name-1">PC2</strong>: <span id="ref-val-1">-</span></div>
+					<div class="ref-item" id="ref-item-2"><strong id="ref-name-2">PC3</strong>: <span id="ref-val-2">-</span></div>
+					<div class="ref-item" id="ref-item-3"><strong id="ref-name-3">PC4</strong>: <span id="ref-val-3">-</span></div>
+					<div class="ref-item" id="ref-item-4"><strong id="ref-name-4">PC5</strong>: <span id="ref-val-4">-</span></div>
+					<div class="ref-item" id="ref-item-5"><strong id="ref-name-5">PC6</strong>: <span id="ref-val-5">-</span></div>
+				</div>
+			</div>
+
+			<div class="control-btns">
+				<input type="button" class="btn-clear" value="全クリア" onclick="allReset()">
+				<input type="button" class="btn-add" value="PC追加" onclick="addPC()">
+				<input type="button" class="btn-remove" value="PC削除" onclick="removePC()">
+			</div>
+
+			<div class="panel-card" style="padding: 4px;">
+				<div class="saveload-container">
+					<div class="saveload-row">
+						<input type="button" class="main-btn" value="URL出力(セーブ)" onclick="saveToUrl()">
+						<textarea id="saveTextArea" placeholder="ここにセーブURLが出力されます" readonly></textarea>
+					</div>
+					<div class="saveload-row">
+						<input type="button" class="main-btn" value="URL読込(ロード)" onclick="loadFromUrl()">
+						<textarea id="loadTextArea" placeholder="ここにセーブURLを貼り付けてロードします"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="rightPanel">
+			<div class="pc-name-setter">
+				<div class="pc-name-container">
+					<div class="pc-name-row" id="name-row-0"><label>PC1</label><input type="text" id="name-input-0" value="PC1" maxlength="10" oninput="updatePCName(0, this)"></div>
+					<div class="pc-name-row" id="name-row-1"><label>PC2</label><input type="text" id="name-input-1" value="PC2" maxlength="10" oninput="updatePCName(1, this)"></div>
+					<div class="pc-name-row" id="name-row-2"><label>PC3</label><input type="text" id="name-input-2" value="PC3" maxlength="10" oninput="updatePCName(2, this)"></div>
+					<div class="pc-name-row" id="name-row-3"><label>PC4</label><input type="text" id="name-input-3" value="PC4" maxlength="10" oninput="updatePCName(3, this)"></div>
+					<div class="pc-name-row" id="name-row-4"><label>PC5</label><input type="text" id="name-input-4" value="PC5" maxlength="10" oninput="updatePCName(4, this)"></div>
+					<div class="pc-name-row" id="name-row-5"><label>PC6</label><input type="text" id="name-input-5" value="PC6" maxlength="10" oninput="updatePCName(5, this)"></div>
+				</div>
+			</div>
+
+			<div style="flex: 1; min-height: 0;">
+				<div class="tab-container">
+					<button class="tab-btn active" id="tab-btn-0" onclick="switchPC(0)">PC1</button>
+					<button class="tab-btn" id="tab-btn-1" onclick="switchPC(1)">PC2</button>
+					<button class="tab-btn" id="tab-btn-2" onclick="switchPC(2)">PC3</button>
+					<button class="tab-btn" id="tab-btn-3" onclick="switchPC(3)">PC4</button>
+					<button class="tab-btn" id="tab-btn-4" onclick="switchPC(4)">PC5</button>
+					<button class="tab-btn" id="tab-btn-5" onclick="switchPC(5)">PC6</button>
+				</div>
+				
+				<div id="pcPanelsContainer" style="height: 100%;"></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

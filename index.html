@@ -62,7 +62,7 @@
 	
 	/* タブシステム */
 	.tab-container { display: flex; gap: 3px; margin-bottom: -1px; position: relative; z-index: 2; }
-	.tab-btn { padding: 5px 14px; background: #e2e8f0; color: #475569; border-radius: 6px 6px 0 0; border: 1px solid #cbd5e0; border-bottom: none; font-weight: 700; font-size: 12px; display: none; box-shadow: none; }
+	.tab-btn { padding: 10px 20px; background: #AAA; color: #000000; border-radius: 6px 6px 0 0; border: 1px solid #000; border-bottom: none; font-weight: 700; font-size: 12px; display: none; box-shadow: none; }
 	.tab-btn:hover { background: #cbd5e0; color: #0f172a; }
 	.tab-btn.active { background: #ffffff; color: #2563eb; border-color: #cbd5e0; border-bottom: 2px solid #ffffff; padding-bottom: 6px; }
 	
@@ -154,9 +154,9 @@
 
 		function buildCheckTable() {
 			const checkTable = document.getElementById("checkTable");
-			let html = "<tr><th>行</th><th>1列</th><th>2列</th><th>3列</th><th>4列</th><th>5列</th><th>6列</th></tr>";
+			let html = "<tr><th> </th><th>1.背景</th><th>2.魅力</th><th>3.性格</th><th>4.趣味</th><th>5.航海</th><th>6.戦闘</th></tr>";
 			for (let i = 0; i < ROWS; i++) {
-				html += "<tr><td style='background:#f8fafc; font-weight:bold; color:#64748b;'>"+(i+1)+"</td>";
+				html += "<tr><td style='background:#f8fafc; font-weight:bold; color:#64748b;'>"+(i+2)+"</td>";
 				for (let j = 0; j < COLS; j++) {
 					html += `<td onclick="clickCheckTarget(${i}, ${j})" id="check-${i}-${j}"><strong>${$SKILLS[i][j]}</strong></td>`;
 				}
@@ -179,7 +179,7 @@
 				html += `<tr>`;
 				for(let j=0; j<COLS; j++) {
 					html += `<th onclick="clickColGap(${p}, ${j})" id="colgap-${p}-${j}" class="colgap-header" title="縦線一括切替"></th>`;
-					html += `<th>${["一.背景","二.魅力","三.性格","四.趣味","五.航海","六.戦闘"][j]}</th>`;
+					html += `<th>${["１.背景","２.魅力","３.性格","４.趣味","５.航海","６.戦闘"][j]}</th>`;
 				}
 				html += `<th class="spacer_black">頁</th></tr></thead><tbody>`;
 				for (let i = 0; i < ROWS; i++) {
@@ -190,7 +190,7 @@
 						html += `<span id="name-${p}-${i}-${j}">${$SKILLS[i][j]}</span><br><span id="val-${p}-${i}-${j}" class="skill-val-text">-</span>`;
 						html += `</td>`;
 					}
-					html += `<td class="spacer_black"><b>${["二","三","四","五","六","七","八","九","十","十一","十二"][i]}</b></td>`;
+					html += `<td class="spacer_black"><b>${["2","3","4","5","6","7","8","9","10","11","12"][i]}</b></td>`;
 					if (i === 0) {
 						html += `<td rowspan="11" class="side-loop" onclick="toggleHLoop(${p})" id="hloop-${p}">左<br>右<br>ル<br>ー<br>プ<br><br><span style='color:#ef4444;'>OFF</span></td>`;
 					}
